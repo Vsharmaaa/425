@@ -40,12 +40,16 @@ app.get( "/api/movies/:id", (req, res) => {
     })
    })
 app.get("/api/movies", (req,res) => {
-    db.getAllMovies(req.query.page, req.query.perPage,req.query.title)
-        .then((data) => {
-            res.status(200).json(data);
+    let title = req.query.title;
+    if (!title) {
+      title = { $exists: true };
+    }
+    db.getAllMovies(req.query.page, req.query.perPage,title)
+        .then((movies) => {
+            res.status(200).json(movies);
         })
-        .catch((error) => {
-            res.status(500).json(error);
+        .catch((err) => {
+            res.status(400).json(err);
         });
 });
 
